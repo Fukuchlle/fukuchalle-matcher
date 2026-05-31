@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>副業マッチング診断</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f2ed;
+      --white: #faf9f7;
+      --border: #ddd9d2;
+      --muted: #9e9890;
+      --ink: #2a2520;
+      --accent: #4a7c6f;
+      --accent-light: #e8f0ee;
+      --danger: #c0392b;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ヘッダー */
+    header { text-align: center; margin-bottom: 36px; }
+    header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.15em; }
+    header p { font-size: 0.75rem; color: var(--muted); margin-top: 6px; letter-spacing: 0.1em; }
+
+    /* 入力セクション */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .card label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      line-height: 1.7;
+      color: var(--ink);
+      background: var(--bg);
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+    textarea:focus { outline: none; border-color: var(--accent); }
+
+    .hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.7;
+    }
+
+    /* ボタン */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      margin-top: 16px;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:active { transform: scale(0.99); }
+    .btn-primary:disabled { background: var(--border); color: var(--muted); cursor: default; }
+
+    .btn-secondary {
+      padding: 8px 20px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--bg); color: var(--ink); }
+
+    /* ローディング */
+    #loading {
+      display: none;
+      text-align: center;
+      padding: 48px 0;
+    }
+    .dot-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      animation: blink 1.2s ease infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
+
+    /* エラー */
+    #error-msg {
+      display: none;
+      background: #fdf0ef;
+      border: 1px solid #f5c6c2;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.82rem;
+      color: var(--danger);
+      margin-top: 12px;
+    }
+
+    /* 結果 */
+    #result { display: none; }
+
+    .summary-card {
+      background: var(--accent-light);
+      border: 1px solid #c5dcd7;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+    .summary-card .label {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .summary-card p { font-size: 0.88rem; line-height: 1.8; }
+
+    .section-title {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      margin-bottom: 12px;
+    }
+
+    /* 案件カード */
+    .job-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+    .job-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .job-badge {
+      font-size: 0.65rem;
+      padding: 3px 9px;
+      border-radius: 100px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .badge-consult { background: #e8f0ee; color: #2d6b5c; border: 1px solid #b8d5cd; }
+    .badge-creative { background: #fef3e8; color: #8b5e2a; border: 1px solid #f5d5a8; }
+    .badge-it { background: #eaecf8; color: #3a4a9a; border: 1px solid #b8c0e8; }
+    .badge-skill { background: #f8eaf0; color: #8a3060; border: 1px solid #e8b8d0; }
+    .badge-general { background: #f0f0f0; color: #555; border: 1px solid #ccc; }
+
+    .job-title { font-size: 0.95rem; font-weight: 600; }
+    .job-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+
+    .links-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 6px; }
+    .links-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .site-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      padding: 5px 11px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+      text-decoration: none;
+      background: var(--bg);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .site-link:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+    .site-link svg { width: 10px; height: 10px; flex-shrink: 0; }
+
+    /* プロフィール */
+    .profile-section {
+      margin-top: 24px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .profile-section textarea {
+      background: var(--bg);
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+    .profile-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .copy-ok { font-size: 0.75rem; color: var(--accent); display: none; }
+
+    .reset-wrap { text-align: center; margin-top: 28px; }
+
+    /* フェードイン */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade { animation: fadeUp 0.4s ease both; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>副業マッチング診断</h1>
+    <p>経歴を入力して、向いている副業案件と検索リンクを取得</p>
+  </header>
+
+  <!-- 入力フォーム -->
+  <div id="input-section">
+    <div class="card">
+      <label>経歴・スキル・やりたいことを入力してください</label>
+      <textarea id="career-input" rows="7"
+        placeholder="例）営業職10年、マネージャー経験あり。顧客折衝・提案が得意。副業でコンサルや研修講師に挑戦したい。
+例）デザイナー8年。UI/UXとグラフィック両方できる。週10時間程度で副業したい。
+例）看護師15年。病院勤務。医療・健康系の記事執筆や相談業務に興味あり。"></textarea>
+      <p class="hint">職種・業界・資格・得意なこと・やりたい副業のイメージなど、自由に書いてください</p>
+      <div id="error-msg"></div>
+      <button class="btn-primary" onclick="analyze()">案件タイプを診断する →</button>
+    </div>
+  </div>
+
+  <!-- ローディング -->
+  <div id="loading">
+    <div class="dot-row">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <p style="font-size:0.85rem; color:var(--muted);">AIが経歴を分析中です...</p>
+  </div>
+
+  <!-- 結果 -->
+  <div id="result">
+
+    <div class="summary-card fade">
+      <div class="label">診断サマリー</div>
+      <p id="summary-text"></p>
+    </div>
+
+    <p class="section-title">おすすめ案件タイプ × 各サイトの検索リンク</p>
+    <div id="job-cards"></div>
+
+    <div class="profile-section fade">
+      <p class="section-title">プロフィール文（各サイトにそのままコピー可）</p>
+      <textarea id="profile-text" rows="5" readonly></textarea>
+      <div class="profile-footer">
+        <button class="btn-secondary" onclick="copyProfile()">コピー</button>
+        <span class="copy-ok" id="copy-ok">コピーしました ✓</span>
+      </div>
+    </div>
+
+    <div class="reset-wrap">
+      <button class="btn-secondary" onclick="reset()">最初からやり直す</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // サイト定義（カテゴリ別）
+  const SITES = {
+    consult: [
+      { name: "ビザスク",    url: kw => `https://service.visasq.com/search?q=${enc(kw)}` },
+      { name: "エキスパート", url: kw => `https://www.expert.co.jp/search?keyword=${enc(kw)}` },
+      { name: "ポートスタッフ", url: kw => `https://www.pasona.co.jp/client/search/?keyword=${enc(kw)}` },
+    ],
+    creative: [
+      { name: "Coconala",   url: kw => `https://coconala.com/search?keyword=${enc(kw)}` },
+      { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
+    ],
+    it: [
+      { name: "レバテック",  url: kw => `https://freelance.levtech.jp/project/search/?keyword=${enc(kw)}` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
+      { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
+    ],
+    skill: [
+      { name: "Coconala",   url: kw => `https://coconala.com/search?keyword=${enc(kw)}` },
+      { name: "ストアカ",   url: kw => `https://www.street-academy.com/search?search[query]=${enc(kw)}` },
+      { name: "タイムチケット", url: kw => `https://timeticket.jp/search?q=${enc(kw)}` },
+    ],
+    general: [
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
+      { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
+      { name: "ビザスク",   url: kw => `https://service.visasq.com/search?q=${enc(kw)}` },
+      { name: "Coconala",   url: kw => `https://coconala.com/search?keyword=${enc(kw)}` },
+    ],
+  };
+
+  const BADGE_LABEL = {
+    consult:  "コンサル・アドバイザー",
+    creative: "クリエイティブ・執筆",
+    it:       "IT・エンジニア",
+    skill:    "スキル販売・講師",
+    general:  "総合",
+  };
+
+  function enc(s) { return encodeURIComponent(s); }
+
+  async function analyze() {
+    const career = document.getElementById('career-input').value.trim();
+    if (!career) { showError('経歴・スキルを入力してください'); return; }
+
+    hideError();
+    document.getElementById('input-section').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+
+    try {
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ career }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `エラー: ${res.status}`);
+
+      renderResult(data);
+    } catch(e) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('input-section').style.display = 'block';
+      showError('エラーが発生しました：' + e.message);
+    }
+  }
+
+  function renderResult(data) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('summary-text').textContent = data.summary;
+    document.getElementById('profile-text').value = data.profile;
+
+    const container = document.getElementById('job-cards');
+    container.innerHTML = '';
+
+    (data.jobTypes || []).forEach((job, idx) => {
+      const cat = job.siteCategory || 'general';
+      const sites = SITES[cat] || SITES.general;
+      const badgeClass = 'badge-' + cat;
+      const badgeLabel = BADGE_LABEL[cat] || cat;
+
+      const linksHtml = (job.keywords || []).flatMap(kw =>
+        sites.map(site => `
+          <a href="${site.url(kw)}" class="site-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M5 2H2a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1V7M8 1h3m0 0v3m0-3L5 7"/>
+            </svg>
+            ${site.name}「${kw}」
+          </a>`)
+      ).join('');
+
+      const card = document.createElement('div');
+      card.className = 'job-card fade';
+      card.style.animationDelay = `${idx * 0.07}s`;
+      card.innerHTML = `
+        <div class="job-card-header">
+          <span class="job-badge ${badgeClass}">${badgeLabel}</span>
+          <span class="job-title">${job.title}</span>
+        </div>
+        <p class="job-desc">${job.description}</p>
+        <p class="links-label">検索リンク</p>
+        <div class="links-wrap">${linksHtml}</div>
+      `;
+      container.appendChild(card);
+    });
+
+    document.getElementById('result').style.display = 'block';
+  }
+
+  function copyProfile() {
+    const text = document.getElementById('profile-text').value;
+    navigator.clipboard.writeText(text).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    });
+    const el = document.getElementById('copy-ok');
+    el.style.display = 'inline';
+    setTimeout(() => el.style.display = 'none', 2000);
+  }
+
+  function reset() {
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('input-section').style.display = 'block';
+    document.getElementById('career-input').value = '';
+    document.getElementById('job-cards').innerHTML = '';
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg; el.style.display = 'block';
+  }
+  function hideError() {
+    document.getElementById('error-msg').style.display = 'none';
+  }
+</script>
+</body>
+</html>
