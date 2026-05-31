@@ -315,12 +315,12 @@ const SITES = {
     creative: [
       { name: "Coconala（仕事を探す）", url: kw => `https://coconala.com/requests?keyword=${enc(kw)}` },
       { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?free_word=${enc(kw)}` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}&job_type=1` },
     ],
     it: [
-      { name: "レバテック",  url: kw => `https://freelance.levtech.jp/project/search/?search_word=${enc(kw)}` },
+      { name: "レバテック",  url: kw => `https://freelance.levtech.jp/project/search/?keyword=${enc(kw)}` },
       { name: "シューマツワーカー", url: kw => `https://shuuumatu-worker.jp/projects?q=${enc(kw)}` },
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?free_word=${enc(kw)}` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}&job_type=1` },
     ],
     skill: [
       { name: "Coconala（仕事を探す）", url: kw => `https://coconala.com/requests?keyword=${enc(kw)}` },
@@ -328,7 +328,7 @@ const SITES = {
       { name: "シューマツワーカー", url: kw => `https://shuuumatu-worker.jp/projects?q=${enc(kw)}` },
     ],
     general: [
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?free_word=${enc(kw)}` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}&job_type=1` },
       { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
       { name: "ビザスク",   url: kw => `https://service.visasq.com/issues?keyword=${enc(kw)}` },
       { name: "シューマツワーカー", url: kw => `https://shuuumatu-worker.jp/projects?q=${enc(kw)}` },
