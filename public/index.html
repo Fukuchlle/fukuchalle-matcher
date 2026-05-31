@@ -308,30 +308,30 @@
   // サイト定義（カテゴリ別）
 const SITES = {
     consult: [
-      { name: "ビザスク",    url: kw => `https://visasq.com/search?keyword=${enc(kw)}` },
-      { name: "エキスパート", url: kw => `https://www.expert.co.jp/search?keyword=${enc(kw)}` },
-      { name: "タイムチケット", url: kw => `https://timeticket.jp/search?q=${enc(kw)}` },
+      { name: "ビザスク",    url: kw => `https://service.visasq.com/issues?keyword=${enc(kw)}` },
+      { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
     ],
     creative: [
-      { name: "Coconala（仕事を探す）", url: kw => `https://coconala.com/jobs/search?keyword=${enc(kw)}` },
+      { name: "Coconala",   url: kw => `https://coconala.com/search?keyword=${enc(kw)}` },
       { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}&order=score` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
     ],
     it: [
       { name: "レバテック",  url: kw => `https://freelance.levtech.jp/project/search/?keyword=${enc(kw)}` },
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}&order=score` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
       { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
     ],
     skill: [
-      { name: "Coconala（仕事を探す）", url: kw => `https://coconala.com/jobs/search?keyword=${enc(kw)}` },
-      { name: "ストアカ",   url: kw => `https://www.street-academy.com/search?search[query]=${enc(kw)}` },
-      { name: "タイムチケット", url: kw => `https://timeticket.jp/search?q=${enc(kw)}` },
+      { name: "Coconala",   url: kw => `https://coconala.com/search?keyword=${enc(kw)}` },
+      { name: "ストアカ",   url: kw => `https://www.street-academy.com/search?q=${enc(kw)}` },
+      { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
     ],
     general: [
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}&order=score` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
       { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
-      { name: "ビザスク",   url: kw => `https://visasq.com/search?keyword=${enc(kw)}` },
-      { name: "Coconala（仕事を探す）", url: kw => `https://coconala.com/jobs/search?keyword=${enc(kw)}` },
+      { name: "ビザスク",   url: kw => `https://service.visasq.com/issues?keyword=${enc(kw)}` },
+      { name: "Coconala",   url: kw => `https://coconala.com/search?keyword=${enc(kw)}` },
     ],
   };
 
