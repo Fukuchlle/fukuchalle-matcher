@@ -309,32 +309,32 @@
 const SITES = {
     consult: [
       { name: "ビザスク",    url: kw => `https://service.visasq.com/issues?keyword=${enc(kw)}` },
+      { name: "シューマツワーカー", url: kw => `https://shuuumatu-worker.jp/projects?q=${enc(kw)}` },
       { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
     ],
     creative: [
-      { name: "Coconala",   url: kw => `https://coconala.com/search?keyword=${enc(kw)}` },
+      { name: "Coconala（仕事を探す）", url: kw => `https://coconala.com/requests?keyword=${enc(kw)}` },
       { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?free_word=${enc(kw)}` },
     ],
     it: [
-      { name: "レバテック",  url: kw => `https://freelance.levtech.jp/project/search/?keyword=${enc(kw)}` },
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
-      { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
+      { name: "レバテック",  url: kw => `https://freelance.levtech.jp/project/search/?search_word=${enc(kw)}` },
+      { name: "シューマツワーカー", url: kw => `https://shuuumatu-worker.jp/projects?q=${enc(kw)}` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?free_word=${enc(kw)}` },
     ],
     skill: [
-      { name: "Coconala",   url: kw => `https://coconala.com/search?keyword=${enc(kw)}` },
-      { name: "ストアカ",   url: kw => `https://www.street-academy.com/search?q=${enc(kw)}` },
+      { name: "Coconala（仕事を探す）", url: kw => `https://coconala.com/requests?keyword=${enc(kw)}` },
       { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
+      { name: "シューマツワーカー", url: kw => `https://shuuumatu-worker.jp/projects?q=${enc(kw)}` },
     ],
     general: [
-      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?keyword=${enc(kw)}` },
+      { name: "クラウドワークス", url: kw => `https://crowdworks.jp/public/jobs/search?free_word=${enc(kw)}` },
       { name: "ランサーズ", url: kw => `https://www.lancers.jp/work/search?keyword=${enc(kw)}` },
       { name: "ビザスク",   url: kw => `https://service.visasq.com/issues?keyword=${enc(kw)}` },
-      { name: "Coconala",   url: kw => `https://coconala.com/search?keyword=${enc(kw)}` },
+      { name: "シューマツワーカー", url: kw => `https://shuuumatu-worker.jp/projects?q=${enc(kw)}` },
     ],
   };
-
+  
   const BADGE_LABEL = {
     consult:  "コンサル・アドバイザー",
     creative: "クリエイティブ・執筆",
